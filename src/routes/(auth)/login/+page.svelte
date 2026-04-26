@@ -1,42 +1,63 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
+	import {
+		Field,
+		FieldDescription,
+		FieldError,
+		FieldGroup,
+		FieldLabel
+	} from '$lib/components/ui/field/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import type { PageProps } from './$types';
 
-	let { form }: { form: ActionData } = $props();
+	let { form }: PageProps = $props();
 </script>
 
-<h1>Login</h1>
-<form method="post" action="?/signInEmail" use:enhance>
-	<label>
-		Email
-		<input
-			type="email"
-			name="email"
-			class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-		/>
-	</label>
-	<label>
-		Password
-		<input
-			type="password"
-			name="password"
-			class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-		/>
-	</label>
-	<label>
-		Name (for registration)
-		<input
-			name="name"
-			class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-		/>
-	</label>
-	<button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-		>Login</button
-	>
-	<button
-		formaction="?/signUpEmail"
-		class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-		>Register</button
-	>
-</form>
-<p class="text-red-500">{form?.message ?? ''}</p>
+<div class="flex min-h-svh items-center justify-center px-6 py-10">
+	<Card.Root class="mx-auto w-full max-w-sm">
+		<Card.Header>
+			<Card.Title class="text-2xl">Welcome back</Card.Title>
+			<Card.Description
+				>Sign in to continue, or create an account with the same form.</Card.Description
+			>
+		</Card.Header>
+		<Card.Content>
+			<form method="post" action="?/signInEmail" use:enhance>
+				<FieldGroup>
+					<Field>
+						<FieldLabel for="email">Email</FieldLabel>
+						<Input id="email" name="email" type="email" placeholder="m@example.com" required />
+					</Field>
+					<Field>
+						<FieldLabel for="password">Password</FieldLabel>
+						<Input id="password" name="password" type="password" required />
+					</Field>
+					<Field>
+						<FieldLabel for="name">Name</FieldLabel>
+						<Input id="name" name="name" type="text" placeholder="Your name" />
+						<FieldDescription>Only needed when creating a new account.</FieldDescription>
+					</Field>
+					<Field>
+						<div class="flex flex-col gap-3">
+							<Button type="submit" class="w-full">Login</Button>
+							<Button
+								type="submit"
+								formaction="?/signUpEmail"
+								variant="outline"
+								class="w-full"
+							>
+								Create account
+							</Button>
+						</div>
+						<FieldDescription class="text-center">
+							Use your email and password to sign in. If you are new here, add your name and create an account.
+						</FieldDescription>
+						<FieldError errors={form?.message ? [{ message: form.message }] : undefined} />
+					</Field>
+				</FieldGroup>
+			</form>
+		</Card.Content>
+	</Card.Root>
+</div>
